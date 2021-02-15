@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage("Setup permissions") {
             steps {
-                chmod +x ./gradlew
+                sh "chmod +x ./gradlew"
             }
         }
         stage("Compile") {
