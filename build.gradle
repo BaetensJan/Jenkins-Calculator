@@ -17,7 +17,11 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'junit:junit:4.12'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.cucumber:cucumber-java:6.8.1'
+    testImplementation 'io.cucumber:cucumber-junit:6.8.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:6.8.1'
 }
 
 test {
@@ -40,4 +44,19 @@ jacocoTestCoverageVerification {
             }
         }
     }
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+task acceptanceTest(type: Test) {
+    include '**/acceptance/**'
+    systemProperties System.getProperties()
+}
+
+test {
+    exclude '**/acceptance/**'
 }
