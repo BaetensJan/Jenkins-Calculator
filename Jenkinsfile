@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        registry = "merilairon.com:5000"
+        registry = "registry.merilairon.com"
         dockerImage = 'calculator'
     }
     stages {
