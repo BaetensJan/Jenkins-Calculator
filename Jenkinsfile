@@ -58,7 +58,7 @@ pipeline {
         stage("Docker push") {
             steps {
                 script {
-                    sh "sudo docker push $registry/$dockerImage:$BUILD_NUMBER $registry/$dockerImage:latest"
+                    sh "sudo docker push $registry/$dockerImage --all-tags"
                 }
             }
         }
