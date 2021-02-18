@@ -1,9 +1,8 @@
 pipeline {
     agent any
     environment {
-        registry = "merilairon/calculator"
-        registryCredential = 'dockerhub'
-        dockerImage = ''
+        registry = "merilairon.com:5000"
+        dockerImage = 'calculator'
     }
     stages {
         stage("Setup permissions") {
@@ -52,25 +51,21 @@ pipeline {
 
         stage("Docker build") {
             steps {
-                script {
-                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
-                }
+                sh "sudo docker build -t $registry/$dockerImage:$BUILD_NUMBER"
             }
         }
 
         stage("Docker push") {
             steps {
                 script {
-                    docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push()
-                    }
+                    sh "sudo docker push $registry/$dockerImage:$BUILD_NUMBER"
                 }
             }
         }
 
         stage('Cleaning up') {
             steps {
-                sh "docker rmi $registry:$BUILD_NUMBER"
+                sh "docker rmi $registry/$dockerImage:$BUILD_NUMBER"
             }
         }
     }
