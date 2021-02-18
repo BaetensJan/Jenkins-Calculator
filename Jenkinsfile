@@ -51,14 +51,14 @@ pipeline {
 
         stage("Docker build") {
             steps {
-                sh "sudo docker build -t $registry/$dockerImage:$BUILD_NUMBER ."
+                sh "sudo docker build -t $registry/$dockerImage:$BUILD_NUMBER -t $registry/$dockerImage:latest ."
             }
         }
 
         stage("Docker push") {
             steps {
                 script {
-                    sh "sudo docker push $registry/$dockerImage:$BUILD_NUMBER"
+                    sh "sudo docker push $registry/$dockerImage:$BUILD_NUMBER $registry/$dockerImage:latest"
                 }
             }
         }
