@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        registry = "merilairon/calculator"
+        registryCredential = 'dockerhub'
+        dockerImage = ''
+    }
     stages {
         stage("Setup permissions") {
             steps {
@@ -47,16 +52,25 @@ pipeline {
 
         stage("Docker build") {
             steps {
-                docker.build("baetensjan/calculator")
+                script {
+                    dockerImage = docker.build registry + ":$BUILD_NUMBER"
+                }
             }
         }
 
         stage("Docker push") {
             steps {
-                docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                    app.push("${env.BUILD_NUMBER}")
-                    app.push("latest")
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                        dockerImage.push()
+                    }
                 }
+            }
+        }
+
+        stage('Cleaning up') {
+            steps {
+                sh "docker rmi $registry:$BUILD_NUMBER"
             }
         }
     }
